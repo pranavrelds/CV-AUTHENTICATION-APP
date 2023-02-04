@@ -4,6 +4,7 @@ from starlette.responses import JSONResponse, RedirectResponse
 
 from controller.auth_controller.schema.auth_schema import Login, Register
 from src.schema.user import User
+from src.validation.user_validation import RegisterValidation
 
 
 router = APIRouter(
