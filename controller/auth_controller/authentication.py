@@ -4,7 +4,7 @@ from starlette.responses import JSONResponse, RedirectResponse
 
 from controller.auth_controller.schema.auth_schema import Login, Register
 from src.schema.user import User
-from src.validation.user_validation import RegisterValidation
+from src.validation.user_registration_validation import RegisterValidation
 
 
 router = APIRouter(
@@ -68,5 +68,21 @@ async def register_user(request: Request, register: Register):
             headers={"uuid": user.uuid_},
         )
         return response
+    except Exception as e:
+        raise e
+
+    
+
+@router.get("/register", response_class=JSONResponse)
+async def authentication_page(request: Request):
+    """Route for User Registration
+
+    Returns:
+        _type_: Register Response
+    """
+    try:
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content={"message": "Registration Page"}
+        )
     except Exception as e:
         raise e
