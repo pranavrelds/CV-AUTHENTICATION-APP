@@ -3,8 +3,13 @@ from fastapi import APIRouter, HTTPException, Request, Response, status
 from starlette.responses import JSONResponse, RedirectResponse
 
 from controller.auth_controller.schema.auth_schema import Login, Register
+from controller.auth_controller.access_token import create_access_token
+
 from src.schema.user import User
+from src.constants.authentication_constants import ALGORITHM, SECRET_KEY
 from src.validation.user_registration_validation import RegisterValidation
+from src.validation.user_login_validation import LoginValidation
+
 
 
 router = APIRouter(
@@ -86,3 +91,62 @@ async def authentication_page(request: Request):
         )
     except Exception as e:
         raise e
+
+
+@router.post("/token")
+async def login_access_token(response: Response, login):
+    try:
+        user_validation = LoginValidation(login.email_id, login.password)
+        user: Optional[str] = user_validation.authenticate_user_login()
+        if not user:
+            return {"status": False, "uuid": None, "response": response}
+        token_expires = timedelta(minutes=15)
+        token = create_access_token(
+            user["UUID"], user["username"], expires_delta=token_expires
+        )
+        response.set_cookie(key="access_token", value=token, httponly=True)
+        return {"status": True, "uuid": user["UUID"], "response": response}
+    except Exception as e:
+        msg = "Failed to set access token"
+        response = JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND, content={"message": msg}
+        )
+        return {"status": False, "uuid": None, "response": response}
+
+
+@router.post("/", response_class=JSONResponse)
+async def login(request: Request, login: Login):
+    """Route for User Login
+
+    Returns:
+        _type_: Login Response
+    """
+    try:
+        msg = "Login Successful"
+        response = JSONResponse(
+            status_code=status.HTTP_200_OK, content={"message": msg}
+        )
+        token_response = await login_access_token(response=response, login=login)
+        if not token_response["status"]:
+            msg = "Incorrect Username and password"
+            return JSONResponse(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                content={"status": False, "message": msg},
+            )
+        response.headers["uuid"] = token_response["uuid"]
+
+        return response
+
+    except HTTPException:
+        msg = "UnKnown Error"
+        return JSONResponse(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            content={"status": False, "message": msg},
+        )
+    except Exception as e:
+        msg = "User NOT Found"
+        response = JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={"status": False, "message": msg},
+        )
+        return response

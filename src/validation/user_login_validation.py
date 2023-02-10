@@ -63,8 +63,9 @@ class LoginValidation:
         Returns:
             bool: _description_
         """
-        return bcrypt_context.verify(plain_password, hashed_password)
-
+        response = bcrypt_context.verify(plain_password, hashed_password)
+        return response
+        
     def validate_login(self) -> dict:
 
         """This method checks all the validation conditions for the user registration
