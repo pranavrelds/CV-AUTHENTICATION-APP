@@ -13,7 +13,7 @@ class Register(BaseModel):
     Base model for register
     """
 
-    Name: str
+    name: str
     username: str
     email_id: str
     ph_no: int

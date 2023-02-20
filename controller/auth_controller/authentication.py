@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, Request, Response, status
 from starlette.responses import JSONResponse, RedirectResponse
 
 from controller.auth_controller.schema.auth_schema import Login, Register
-from controller.auth_controller.access_token import create_access_token
+from controller.auth_controller.access_token.access_token import create_access_token
 
 from src.schema.user import User
 from src.constants.authentication_constants import ALGORITHM, SECRET_KEY
@@ -17,6 +17,21 @@ router = APIRouter(
     tags=["auth"],
     responses={"401": {"description": "Not Authorized!!!"}},
 )
+
+
+@router.get("/register", response_class=JSONResponse)
+async def authentication_register_page(request: Request):
+    """Route for User Registration
+
+    Returns:
+        _type_: Register Response
+    """
+    try:
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content={"message": "Registration Page"}
+        )
+    except Exception as e:
+        raise e
 
 
 @router.post("/register", response_class=JSONResponse)
@@ -40,12 +55,12 @@ async def register_user(request: Request, register: Register):
         _type_: Will redirect to the embedding generation route and return the UUID of user
     """
     try:
-        name = register.Name
+        name = register.name
         username = register.username
-        password1 = register.password1
-        password2 = register.password2
         email_id = register.email_id
         ph_no = register.ph_no
+        password1 = register.password1
+        password2 = register.password2
 
         # Add uuid to the session
         user = User(name, username, email_id, ph_no, password1, password2)
@@ -76,22 +91,6 @@ async def register_user(request: Request, register: Register):
     except Exception as e:
         raise e
 
-    
-
-@router.get("/register", response_class=JSONResponse)
-async def authentication_page(request: Request):
-    """Route for User Registration
-
-    Returns:
-        _type_: Register Response
-    """
-    try:
-        return JSONResponse(
-            status_code=status.HTTP_200_OK, content={"message": "Registration Page"}
-        )
-    except Exception as e:
-        raise e
-
 
 @router.post("/token")
 async def login_access_token(response: Response, login):
@@ -112,6 +111,21 @@ async def login_access_token(response: Response, login):
             status_code=status.HTTP_404_NOT_FOUND, content={"message": msg}
         )
         return {"status": False, "uuid": None, "response": response}
+
+
+@router.get("/", response_class=JSONResponse)
+async def authentication_login_page(request: Request):
+    """Login GET route
+
+    Returns:
+        _type_: JSONResponse
+    """
+    try:
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content={"message": "Authentication Page"}
+        )
+    except Exception as e:
+        raise e
 
 
 @router.post("/", response_class=JSONResponse)

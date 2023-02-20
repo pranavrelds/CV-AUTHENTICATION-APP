@@ -4,7 +4,7 @@ import uuid
 class User:
     def __init__(
         self,
-        Name: str,
+        name: str,
         username: str,
         email_id: str,
         ph_no: str,
@@ -12,7 +12,7 @@ class User:
         password2: str,
         uuid_: str = None,
     ):
-        self.Name = Name
+        self.name = name
         self.username = username
         self.email_id = email_id
         self.ph_no = ph_no
