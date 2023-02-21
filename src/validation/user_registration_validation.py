@@ -105,7 +105,7 @@ class RegisterValidation:
         return False
 
     @staticmethod
-    def get_password_hash(password: str) -> str:
+    def get_password_hash(self, password: str) -> str:
         return bcrypt_context.hash(password)
 
     def validate_registration(self) -> bool:
@@ -129,7 +129,7 @@ class RegisterValidation:
                 logging.info("Generating the password hash.....")
                 hashed_password: str = self.get_password_hash(self.user.password1)
                 user_data_dict: dict = {
-                    "Name": self.user.Name,
+                    "Name": self.user.name,
                     "username": self.user.username,
                     "password": hashed_password,
                     "email_id": self.user.email_id,
