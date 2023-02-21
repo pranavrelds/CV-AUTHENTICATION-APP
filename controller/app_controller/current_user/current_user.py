@@ -1,4 +1,4 @@
-from fastapi import Response
+from fastapi import Response, Request
 from jose import JWTError, jwt
 from starlette.responses import JSONResponse
 
