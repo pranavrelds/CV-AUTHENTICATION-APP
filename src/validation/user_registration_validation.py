@@ -38,7 +38,7 @@ class RegisterValidation:
         """
         try:
             msg = ""
-            if self.user.Name == None:
+            if self.user.name == None:
                 msg += "Name is required"
 
             if self.user.username == None:
@@ -105,7 +105,7 @@ class RegisterValidation:
         return False
 
     @staticmethod
-    def get_password_hash(self, password: str) -> str:
+    def get_password_hash(password: str) -> str:
         return bcrypt_context.hash(password)
 
     def validate_registration(self) -> bool:
