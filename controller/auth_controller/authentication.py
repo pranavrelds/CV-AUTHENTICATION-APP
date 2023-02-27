@@ -1,15 +1,17 @@
+from typing import Optional
+from datetime import datetime, timedelta
+
 import uvicorn
+from jose import JWTError, jwt
 from fastapi import APIRouter, HTTPException, Request, Response, status
 from starlette.responses import JSONResponse, RedirectResponse
 
 from controller.auth_controller.schema.auth_schema import Login, Register
-from controller.auth_controller.access_token.access_token import create_access_token
 
 from src.schema.user import User
 from src.constants.authentication_constants import ALGORITHM, SECRET_KEY
 from src.validation.user_registration_validation import RegisterValidation
 from src.validation.user_login_validation import LoginValidation
-
 
 
 router = APIRouter(
@@ -88,6 +90,36 @@ async def register_user(request: Request, register: Register):
             headers={"uuid": user.uuid_},
         )
         return response
+    except Exception as e:
+        raise e
+
+
+def create_access_token(
+    uuid: str, username: str, expires_delta: Optional[timedelta] = None) -> str:
+    """Function to create the access token
+
+    Args:
+        uuid (str): uuid of the user
+        username (str): username of the user
+
+    Raises:
+        e: _description_
+
+    Returns:
+        _type_: _description_
+    """
+
+    try:
+        secret_key = SECRET_KEY
+        algorithm = ALGORITHM
+
+        encode = {"sub": uuid, "username": username}
+        if expires_delta:
+            expire = datetime.utcnow() + expires_delta
+        else:
+            expire = datetime.utcnow() + timedelta(minutes=15)
+        encode.update({"exp": expire})
+        return jwt.encode(encode, secret_key, algorithm=algorithm)
     except Exception as e:
         raise e
 

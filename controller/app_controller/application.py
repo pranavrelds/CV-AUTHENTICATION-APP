@@ -79,10 +79,8 @@ async def login_embedding(
             return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
 
         user_embedding_validation = UserLoginEmbeddingValidation(user["uuid"])
-
         # Compare embedding
         user_similariy_status = user_embedding_validation.compare_embedding(files)
-
         if user_similariy_status:
             msg = "User is authenticated"
             response = JSONResponse(
