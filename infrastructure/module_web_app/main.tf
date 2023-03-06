@@ -1,3 +1,7 @@
+module "container_registry" {
+  source = "../module_container_registry"
+}
+
 resource "random_id" "random_string" {
   byte_length = 8
 }
