@@ -6,9 +6,8 @@ In the digital age, security is paramount. Traditional password-based authentica
 ## Solution
 The CV-AUTHENTICATION-APP offers a two-factor authentication system that combines the reliability of face recognition with the familiarity of password-based authentication. By integrating the FaceNet algorithm for face recognition and the MTCNN algorithm for face detection, this system ensures a higher level of security while providing a seamless user experience.
 
-- **FaceNet**: A deep learning algorithm trained to produce embeddings of faces, allowing for efficient comparison between faces to ascertain identity.
-  
 - **MTCNN**: An algorithm designed for accurate face detection, ensuring that faces within images and videos are promptly identified.
+- **FaceNet**: A deep learning algorithm trained to produce embeddings of faces, allowing for efficient comparison between faces to ascertain identity.
 
 The system will work as follows:
 * The user will be presented with a prompt to enter their face and password
@@ -16,7 +15,9 @@ The system will work as follows:
 * The system will use FaceNet to compare the user's face to the faces in the existing database
 * If the faces match, the system will accept the password and authenticate the user
 * If the faces do not match, the system will reject the password and deny access to the user
-* 
+
+For more details on the architecture, please refer flowchart folder
+
 ## How to Run the Code
 
 1. **Setup**: Ensure you have all the required packages installed. You can do this by running:
